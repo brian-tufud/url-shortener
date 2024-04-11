@@ -23,8 +23,8 @@ public class UrlService {
             String randomSuffix = generateRandomSuffix(6);
 
             String longURLWithSuffix = longURL + randomSuffix;
-            
-            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
             byte[] digest = md.digest(longURLWithSuffix.getBytes());
             BigInteger hashInt = new BigInteger(1, digest);
             
