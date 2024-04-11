@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/url")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class UrlController {
 
@@ -30,6 +29,14 @@ public class UrlController {
 
         HttpHeaders responseHeaders = utilsService.getResponseHeaders();
         return ResponseEntity.ok().headers(responseHeaders).body(cart);
+    }
+
+    @GetMapping("/{short_url}") 
+    public ResponseEntity<Void> getLongURL(@PathVariable(value = "short_url") String shortURL) throws Exception {
+
+        String longURL = urlService.getLongURL(shortURL);
+
+        return utilsService.redirect(longURL);
     }
     
 }
