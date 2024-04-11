@@ -4,7 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
 
+import com.urlshortener.api.utils.Constants;
 import com.urlshortener.api.utils.UtilsService;
 
 import nl.basjes.parse.useragent.UserAgent;
@@ -82,6 +84,23 @@ public class StatisticsService {
 
         return;
         
+    }
+
+    private String getClientIpAddress(HttpServletRequest request) {
+
+        if (RequestContextHolder.getRequestAttributes() == null) {
+            return "0.0.0.0";
+        }
+
+        for (String header: Constants.IP_HEADER_CANDIDATES) {
+            String ipList = request.getHeader(header);
+            if (ipList != null && ipList.length() != 0 && !"unknown".equalsIgnoreCase(ipList)) {
+                String ip = ipList.split(",")[0];
+                return ip;
+            }
+        }
+
+        return request.getRemoteAddr();
     }
 
 }
