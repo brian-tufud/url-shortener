@@ -16,7 +16,11 @@ public class UrlService {
     @Autowired
     private UrlRepositoryService urlRepositoryService;
 
-    private final String SHORT_URL_PREFIX = "https://me.li/";
+    private final String SHORT_URL_PREFIX = "http://localhost:8080/";
+
+    public String getLongURL(String shortURL) {
+        return "https://articulo.mercadolibre.com.uy/MLU-460530019-carpa-6-personas-colchon-inflable-de-2-plazas-inflador--_JM#reco_item_pos=2&reco_backend=item_decorator&reco_backend_type=function&reco_client=home_items-decorator-legacy&reco_id=583bf3a0-af13-4478-8184-239917f20781&c_id=/home/navigation-trends-recommendations/element&c_uid=994aa749-bccd-43cd-8c0a-af26a4c77820&da_id=navigation_trend&da_position=2&id_origin=/home/dynamic_access&da_sort_algorithm=ranker";
+    }
 
     public String shortenURL(String longURL) {
         try {
