@@ -9,11 +9,37 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 @Service
 public class UrlService {
     
     @Autowired
     private UrlRepositoryService userRepositoryService;
+
+    private final String SHORT_URL_PREFIX = "https://me.li/";
+
+    public String shortenURL(String longURL) {
+        try {
+            String randomSuffix = generateRandomSuffix(6);
+
+            String longURLWithSuffix = longURL + randomSuffix;
+            
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(longURLWithSuffix.getBytes());
+            BigInteger hashInt = new BigInteger(1, digest);
+            
+            String base62Fragment = encodeBase62(hashInt);
+            
+            String shortFragment = base62Fragment.substring(0, 6);
+            
+            String shortURL = SHORT_URL_PREFIX + shortFragment;
+
+            return shortURL;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     private String generateRandomSuffix(int length) {
         String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -27,10 +53,9 @@ public class UrlService {
     }
 
     private String encodeBase62(BigInteger num) {
-        // Definir el alfabeto para la codificación base 62
         String alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder base62 = new StringBuilder();
-        // Codificar el número en base 62
+        
         while (num.compareTo(BigInteger.ZERO) > 0) {
             BigInteger[] divmod = num.divideAndRemainder(BigInteger.valueOf(62));
             base62.insert(0, alphabet.charAt(divmod[1].intValue()));
