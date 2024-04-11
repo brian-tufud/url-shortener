@@ -25,10 +25,10 @@ public class UrlController {
     @PostMapping("/shorten")
     public ResponseEntity<String> shortenURL(HttpServletRequest request) throws Exception {
 
-        String cart = urlService.shortenURL(request.getParameter("url"));
+        String shortUrl = urlService.shortenURL(request.getParameter("url"));
 
         HttpHeaders responseHeaders = utilsService.getResponseHeaders();
-        return ResponseEntity.ok().headers(responseHeaders).body(cart);
+        return ResponseEntity.ok().headers(responseHeaders).body(shortUrl);
     }
 
     @GetMapping("/{short_url}") 
