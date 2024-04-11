@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class UrlService {
     
     @Autowired
-    private UrlRepositoryService userRepositoryService;
+    private UrlRepositoryService urlRepositoryService;
 
     private final String SHORT_URL_PREFIX = "https://me.li/";
 
