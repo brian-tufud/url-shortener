@@ -1,5 +1,6 @@
 package com.urlshortener.api.controller;
 
+import com.urlshortener.api.service.StatisticsService;
 import com.urlshortener.api.service.UrlService;
 import com.urlshortener.api.utils.UtilsService;
 
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class UrlController {
 
     private final UrlService urlService;
+    private final StatisticsService statisticsService;
     private final UtilsService utilsService;
 
-    public UrlController(UrlService urlService, UtilsService utilsService) {
+    public UrlController(UrlService urlService, StatisticsService statisticsService, UtilsService utilsService) {
         super();
         this.urlService = urlService;
+        this.statisticsService = statisticsService;
         this.utilsService = utilsService;
     }
 
@@ -32,9 +35,12 @@ public class UrlController {
     }
 
     @GetMapping("/{short_url}") 
-    public ResponseEntity<Void> getLongURL(@PathVariable(value = "short_url") String shortURL) throws Exception {
+    public ResponseEntity<Void> getLongURL(HttpServletRequest request,
+        @PathVariable(value = "short_url") String shortURL) throws Exception {
 
         String longURL = urlService.getLongURL(shortURL);
+        
+        statisticsService.getUserAgentData(request);
 
         return utilsService.redirect(longURL);
     }
