@@ -1,0 +1,199 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "UrlStorageTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "UrlStorageTable",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "hash",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "longUrl",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "createdAt",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "userId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "hash",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 100,
+          "WriteCapacityUnits": 100
+        }
+      }
+    },
+    "UrlCacheCluster": {
+      "Type": "AWS::ElastiCache::CacheCluster",
+      "Properties": {
+        "CacheNodeType": "cache.t2.micro",
+        "Engine": "redis",
+        "NumCacheNodes": 2,
+        "VpcSecurityGroupIds": [ "your-security-group-id" ]
+      }
+    },
+    "UrlShortenerApi": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "UrlShortenerAPI"
+      }
+    },
+    "CreateDeleteStatsEC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": "t2.micro",
+        "ImageId": "ami-0c55b159cbfafe1f0",
+        "SecurityGroupIds": [ "your-security-group-id" ],
+        "KeyName": "your-key-pair-name",
+        "UserData": {
+          "Fn::Base64": { "Fn::Join": ["", [
+            "#!/bin/bash\n",
+            "yum update -y\n",
+            "yum install -y httpd\n",
+            "service httpd start\n",
+            "chkconfig httpd on\n"
+          ]]}
+        }
+      }
+    },
+    "ObtainUrlEC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": "t2.micro",
+        "ImageId": "ami-0c55b159cbfafe1f0",
+        "SecurityGroupIds": [ "your-security-group-id" ],
+        "KeyName": "your-key-pair-name",
+        "UserData": {
+          "Fn::Base64": { "Fn::Join": ["", [
+            "#!/bin/bash\n",
+            "yum update -y\n",
+            "yum install -y httpd\n",
+            "service httpd start\n",
+            "chkconfig httpd on\n"
+          ]]}
+        }
+      }
+    },
+    "ApiGatewayEC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": "t2.micro",
+        "ImageId": "ami-0c55b159cbfafe1f0",
+        "SecurityGroupIds": [ "your-security-group-id" ],
+        "KeyName": "your-key-pair-name",
+        "UserData": {
+          "Fn::Base64": { "Fn::Join": ["", [
+            "#!/bin/bash\n",
+            "yum update -y\n",
+            "yum install -y httpd\n",
+            "service httpd start\n",
+            "chkconfig httpd on\n"
+          ]]}
+        }
+      }
+    },
+    "CreateShortUrlMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "ResourceId": { "Fn::GetAtt": ["UrlShortenerApi", "RootResourceId"] },
+        "RestApiId": { "Ref": "UrlShortenerApi" },
+        "ApiKeyRequired": false,
+        "RequestParameters": {
+          "method.request.body.longUrl": true,
+          "method.request.body.userId": true
+        },
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationHttpMethod": "POST",
+          "Uri": { "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:dynamodb:action/PutItem" },
+          "RequestTemplates": {
+            "application/json": {
+              "TableName": "UrlStorageTable",
+              "Item": {
+                "hash": { "S": "$util.autoId()" },
+                "longUrl": { "S": "$input.path('$.longUrl')" },
+                "shortUrl": { "S": "generatedShortUrl" },
+                "createdAt": { "S": "$context.requestTime" },
+                "userId": { "S": "$input.path('$.userId')" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "DeleteShortUrlMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "DELETE",
+        "ResourceId": { "Fn::GetAtt": ["UrlShortenerApi", "RootResourceId"] },
+        "RestApiId": { "Ref": "UrlShortenerApi" },
+        "ApiKeyRequired": false
+      }
+    },
+    "MassCreateShortUrlsMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "ResourceId": { "Fn::GetAtt": ["UrlShortenerApi", "RootResourceId"] },
+        "RestApiId": { "Ref": "UrlShortenerApi" },
+        "ApiKeyRequired": false
+      }
+    },
+    "MassDeleteShortUrlsMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "DELETE",
+        "ResourceId": { "Fn::GetAtt": ["UrlShortenerApi", "RootResourceId"] },
+        "RestApiId": { "Ref": "UrlShortenerApi" },
+        "ApiKeyRequired": false
+      }
+    },
+    "GetStatisticsMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "ResourceId": { "Fn::GetAtt": ["UrlShortenerApi", "RootResourceId"] },
+        "RestApiId": { "Ref": "UrlShortenerApi" },
+        "ApiKeyRequired": false
+      }
+    },
+    "GetShortUrlMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "ResourceId": { "Fn::GetAtt": ["UrlShortenerApi", "RootResourceId"] },
+        "RestApiId": { "Ref": "UrlShortenerApi" },
+        "ApiKeyRequired": false
+      }
+    },
+    "GetLongUrlMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "ResourceId": { "Fn::GetAtt": ["UrlShortenerApi", "RootResourceId"] },
+        "RestApiId": { "Ref": "UrlShortenerApi" },
+        "ApiKeyRequired": false
+      }
+    }
+  }
+}
