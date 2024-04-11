@@ -1,9 +1,14 @@
 package com.urlshortener.api.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.urlshortener.api.utils.UtilsService;
+
+import nl.basjes.parse.useragent.UserAgent;
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 
 @Service
 public class StatisticsService {
@@ -54,6 +59,29 @@ public class StatisticsService {
     public int getNotFoundCount() {
         // Get the not found count
         return 0;
+    }
+
+    public void getUserAgentData(HttpServletRequest request) {
+        String userAgentString = request.getHeader("User-Agent");
+
+        UserAgentAnalyzer uaa = UserAgentAnalyzer
+                    .newBuilder()
+                    .hideMatcherLoadStats()
+                    .withoutCache()
+                    .build();
+
+        UserAgent agent = uaa.parse(userAgentString);
+
+        String deviceClass = agent.getValue("DeviceClass");
+        String deviceName = agent.getValue("DeviceName");
+        String deviceBrand = agent.getValue("DeviceBrand");
+        String operatingSystemName = agent.getValue("OperatingSystemName");
+        String operatingSystemVersion = agent.getValue("OperatingSystemVersion");
+        String agentName = agent.getValue("AgentName");
+        String agentVersion = agent.getValue("AgentVersion");
+
+        return;
+        
     }
 
 }
