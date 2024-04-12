@@ -40,7 +40,7 @@ public class UrlController {
 
         String longURL = urlService.getLongURL(shortURL);
         
-        statisticsService.getUserAgentData(request);
+        statisticsService.sendDataForStatistics(request, shortURL);
 
         return utilsService.redirect(longURL);
     }
