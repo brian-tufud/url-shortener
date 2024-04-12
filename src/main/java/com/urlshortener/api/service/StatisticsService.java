@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import com.urlshortener.api.response.IpStackResponse;
 import com.urlshortener.api.utils.Constants;
 import com.urlshortener.api.utils.UtilsService;
 
@@ -17,6 +18,9 @@ public class StatisticsService {
 
     @Autowired
     private UtilsService utilsService;
+
+    @Autowired
+    private IpStackService ipStackService;
 
     public void incrementAccessCount(String shortURL) {
         // Increment the access count for the given short URL
@@ -82,8 +86,20 @@ public class StatisticsService {
         String agentName = agent.getValue("AgentName");
         String agentVersion = agent.getValue("AgentVersion");
 
+        IpStackResponse ipData = getIpData(request);
+
         return;
         
+    }
+
+    public IpStackResponse getIpData(HttpServletRequest request) {
+        String ipAddress = getClientIpAddress(request);
+
+        return getIpDetails(ipAddress);
+    }
+
+    private IpStackResponse getIpDetails(String ipAddress) {
+        return ipStackService.getIpDetails(ipAddress);
     }
 
     private String getClientIpAddress(HttpServletRequest request) {
