@@ -1,14 +1,16 @@
 package com.urlshortener.api.service;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import com.urlshortener.api.aws.SqsService;
 import com.urlshortener.api.response.IpStackResponse;
 import com.urlshortener.api.utils.Constants;
-import com.urlshortener.api.utils.UtilsService;
 
 import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
@@ -17,10 +19,10 @@ import nl.basjes.parse.useragent.UserAgentAnalyzer;
 public class StatisticsService {
 
     @Autowired
-    private UtilsService utilsService;
+    private IpStackService ipStackService;
 
     @Autowired
-    private IpStackService ipStackService;
+    private SqsService sqsService;
 
     public void incrementAccessCount(String shortURL) {
         // Increment the access count for the given short URL
@@ -65,6 +67,11 @@ public class StatisticsService {
     public int getNotFoundCount() {
         // Get the not found count
         return 0;
+    }
+
+    public void sendDataForStatistics(HttpServletRequest request, String shortURL) {
+        HashMap<String, String> metadata = getMetadata(request, shortURL);
+        sqsService.post(Constants.STATISTICS_QUEUE, metadata);
     }
 
     public void getUserAgentData(HttpServletRequest request) {
@@ -117,6 +124,16 @@ public class StatisticsService {
         }
 
         return request.getRemoteAddr();
+    }
+
+    private HashMap<String, String> getMetadata(HttpServletRequest request, String shortURL) {
+        HashMap<String, String> metadata = new HashMap<String, String>();
+
+        metadata.put("short_url", shortURL);
+        metadata.put("client_ip", getClientIpAddress(request));
+        metadata.put("user_agent", request.getHeader("User-Agent"));
+
+        return metadata;
     }
 
 }
