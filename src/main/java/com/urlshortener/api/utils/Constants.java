@@ -1,7 +1,7 @@
 package com.urlshortener.api.utils;
 
 public class Constants {
-    public static final String SHORT_URL_PREFIX = "https://7f52-2800-a4-22a5-c200-3480-7248-813b-860e.ngrok-free.app/";
+    public static final String SHORT_URL_PREFIX = "http://localhost:8080/";
 
     public static final String IP_STACK_URL = "http://api.ipstack.com/";
 
