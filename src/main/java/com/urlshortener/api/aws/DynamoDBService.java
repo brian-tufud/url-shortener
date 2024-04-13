@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
+import com.urlshortener.api.exception.NotFoundException;
 import com.urlshortener.api.utils.Constants;
 
 import org.springframework.stereotype.Service;
@@ -24,6 +25,11 @@ public class DynamoDBService {
         Map<String, AttributeValue> item = buildItem(shortUrl, longUrl);
         String shard = getCorrespondingShard(shortUrl);
         insertRecord(item, shard);
+    }
+
+    public String getLongUrl(String shortUrl) {
+        String shard = getCorrespondingShard(shortUrl);
+        return getLongUrlFromShard(shortUrl, shard);
     }
 
     private Map<String, AttributeValue> buildItem(String shortUrl, String longUrl) {
@@ -61,6 +67,25 @@ public class DynamoDBService {
                 .build();
         
         dynamoDbClient.putItem(putItemRequest);
+    }
+
+    private String getLongUrlFromShard(String shortUrl, String shard) {
+        Map<String, AttributeValue> key = new HashMap<>();
+        key.put("short_url", AttributeValue.builder().s(shortUrl).build());
+
+        GetItemRequest getItemRequest = GetItemRequest.builder()
+                .tableName(shard)
+                .key(key)
+                .build();
+
+        GetItemResponse getItemResponse = dynamoDbClient.getItem(getItemRequest);
+        Map<String, AttributeValue> item = getItemResponse.item();
+
+        if (item == null) {
+            throw new NotFoundException("Short URL " + shortUrl + " not found");
+        }
+
+        return item.get("long_url").s();
     }
     
     @PreDestroy
