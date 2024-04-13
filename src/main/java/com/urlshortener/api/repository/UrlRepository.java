@@ -38,7 +38,8 @@ public class UrlRepository {
     public Boolean checkIfShortUrlExists(String shortUrl) {
         String shard = getCorrespondingShard(shortUrl);
         Map<String, AttributeValue> item = dynamoDBService.getItem(shortUrl, shard);
-        return item != null;
+
+        return item.get("short_url") != null;
     }
 
     private Map<String, AttributeValue> buildItem(String shortUrl, String longUrl) {
