@@ -1,4 +1,4 @@
-package com.urlshortener.api.aws;
+package com.read.api.aws;
 
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;

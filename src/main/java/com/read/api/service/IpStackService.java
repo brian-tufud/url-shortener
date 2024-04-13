@@ -1,4 +1,4 @@
-package com.urlshortener.api.service;
+package com.read.api.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,11 +7,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.springframework.stereotype.Service;
+
+import com.read.api.response.IpStackResponse;
+import com.read.api.utils.Constants;
+
 import org.json.JSONObject;
-
-import com.urlshortener.api.response.IpStackResponse;
-
-import com.urlshortener.api.utils.Constants;
 
 @Service
 public class IpStackService {

@@ -1,14 +1,14 @@
-package com.urlshortener.api.controller;
-
-import com.urlshortener.api.service.StatisticsService;
-import com.urlshortener.api.service.UrlService;
-import com.urlshortener.api.utils.UtilsService;
+package com.read.api.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.read.api.service.StatisticsService;
+import com.read.api.service.UrlService;
+import com.read.api.utils.UtilsService;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,15 +23,6 @@ public class UrlController {
         this.urlService = urlService;
         this.statisticsService = statisticsService;
         this.utilsService = utilsService;
-    }
-
-    @PostMapping("/shorten")
-    public ResponseEntity<String> shortenURL(HttpServletRequest request) throws Exception {
-
-        String shortUrl = urlService.shortenURL(request.getParameter("url"));
-
-        HttpHeaders responseHeaders = utilsService.getResponseHeaders();
-        return ResponseEntity.ok().headers(responseHeaders).body(shortUrl);
     }
 
     @GetMapping("/{short_url}") 

@@ -1,4 +1,4 @@
-package com.urlshortener.api;
+package com.read.api;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

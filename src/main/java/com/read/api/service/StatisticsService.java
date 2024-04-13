@@ -1,4 +1,4 @@
-package com.urlshortener.api.service;
+package com.read.api.service;
 
 import java.util.HashMap;
 
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import com.urlshortener.api.aws.SqsService;
-import com.urlshortener.api.response.IpStackResponse;
-import com.urlshortener.api.utils.Constants;
+import com.read.api.aws.SqsService;
+import com.read.api.response.IpStackResponse;
+import com.read.api.utils.Constants;
 
 import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;

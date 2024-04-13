@@ -1,4 +1,4 @@
-package com.urlshortener.api;
+package com.read.api;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

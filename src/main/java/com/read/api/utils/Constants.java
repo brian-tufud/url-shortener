@@ -1,4 +1,4 @@
-package com.urlshortener.api.utils;
+package com.read.api.utils;
 
 public class Constants {
     public static final String SHORT_URL_PREFIX = "http://localhost:8080/";

@@ -1,4 +1,4 @@
-package com.urlshortener.api.repository;
+package com.read.api.repository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,9 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.urlshortener.api.aws.DynamoDBService;
-import com.urlshortener.api.exception.NotFoundException;
-import com.urlshortener.api.utils.Constants;
+import com.read.api.aws.DynamoDBService;
+import com.read.api.exception.NotFoundException;
+import com.read.api.utils.Constants;
 
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 

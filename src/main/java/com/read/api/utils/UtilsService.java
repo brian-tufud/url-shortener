@@ -1,4 +1,4 @@
-package com.urlshortener.api.utils;
+package com.read.api.utils;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

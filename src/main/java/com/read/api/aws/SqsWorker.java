@@ -1,4 +1,4 @@
-package com.urlshortener.api.aws;
+package com.read.api.aws;
 
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;

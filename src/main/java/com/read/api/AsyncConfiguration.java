@@ -1,4 +1,4 @@
-package com.urlshortener.api;
+package com.read.api;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
