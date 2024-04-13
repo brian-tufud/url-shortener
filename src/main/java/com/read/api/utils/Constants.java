@@ -1,8 +1,7 @@
 package com.read.api.utils;
 
 public class Constants {
-    public static final String SHORT_URL_PREFIX = "http://localhost:8080/";
-
+    
     public static final String IP_STACK_URL = "http://api.ipstack.com/";
 
     //TODO - borrar esto de acá y ponerlo como env variable en la instancia al momento del deploy
