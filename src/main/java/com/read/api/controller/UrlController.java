@@ -12,6 +12,7 @@ import com.read.api.utils.UtilsService;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/api/url")
 public class UrlController {
 
     private final UrlService urlService;
