@@ -16,15 +16,6 @@ public class DynamoDBService {
             .region(Region.US_EAST_1)
             .build();
 
-    public void insert(Map<String, AttributeValue> item, String shard) {
-        PutItemRequest putItemRequest = PutItemRequest.builder()
-                .tableName(shard)
-                .item(item)
-                .build();
-
-        dynamoDbClient.putItem(putItemRequest);
-    }
-
     public Map<String, AttributeValue> getItem(String shortUrl, String shard) {
         Map<String, AttributeValue> key = new HashMap<>();
         key.put("short_url", AttributeValue.builder().s(shortUrl).build());

@@ -1,6 +1,5 @@
 package com.read.api.repository;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,6 @@ public class UrlRepository {
     @Autowired
     private DynamoDBService dynamoDBService;
 
-    public void insert(String shortUrl, String longUrl) throws Exception {
-        String shard = getCorrespondingShard(shortUrl);
-        Map<String, AttributeValue> item = buildItem(shortUrl, longUrl);
-        dynamoDBService.insert(item, shard);
-    }
-
     public String getLongUrl(String shortUrl) {
         String shard = getCorrespondingShard(shortUrl);
         Map<String, AttributeValue> item = dynamoDBService.getItem(shortUrl, shard);
@@ -33,21 +26,6 @@ public class UrlRepository {
         }
 
         return item.get("long_url").s();
-    }
-
-    public Boolean checkIfShortUrlExists(String shortUrl) {
-        String shard = getCorrespondingShard(shortUrl);
-        Map<String, AttributeValue> item = dynamoDBService.getItem(shortUrl, shard);
-
-        return item.get("short_url") != null;
-    }
-
-    private Map<String, AttributeValue> buildItem(String shortUrl, String longUrl) {
-        Map<String, AttributeValue> item = new HashMap<>();
-        item.put("short_url", AttributeValue.builder().s(shortUrl).build());
-        item.put("long_url", AttributeValue.builder().s(longUrl).build());
-        item.put("created_at", AttributeValue.builder().s(String.valueOf(System.currentTimeMillis())).build());
-        return item;
     }
 
     private String getCorrespondingShard(String shortUrl) {
