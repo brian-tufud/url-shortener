@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.read.api.dto.LongURLDto;
+
 @Service
 public class UtilsService {
 
@@ -20,16 +22,12 @@ public class UtilsService {
         return responseHeaders;
     }
 
-    public ResponseEntity<Void> redirect(String url) {
-        HttpHeaders responseHeaders = getRedirectHeaders(url);
-        return new ResponseEntity<>(responseHeaders, HttpStatus.MOVED_PERMANENTLY);
-    }
-
-    private HttpHeaders getRedirectHeaders(String url) {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(ServletUriComponentsBuilder.fromUriString(url).build().toUri());
-
-        return responseHeaders;
+    public LongURLDto getLongURLDto(String longURL) {
+        LongURLDto longURLDto = new LongURLDto();
+        
+        longURLDto.setLongURL(longURL);
+    
+        return longURLDto;
     }
 
 }
