@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.read.api.service.StatisticsService;
+import com.read.api.dto.LongURLDto;
 import com.read.api.service.UrlService;
 import com.read.api.utils.UtilsService;
 
@@ -16,25 +16,22 @@ import com.read.api.utils.UtilsService;
 public class UrlController {
 
     private final UrlService urlService;
-    private final StatisticsService statisticsService;
     private final UtilsService utilsService;
 
-    public UrlController(UrlService urlService, StatisticsService statisticsService, UtilsService utilsService) {
+    public UrlController(UrlService urlService, UtilsService utilsService) {
         super();
         this.urlService = urlService;
-        this.statisticsService = statisticsService;
         this.utilsService = utilsService;
     }
 
     @GetMapping("/{short_url}") 
-    public ResponseEntity<Void> getLongURL(HttpServletRequest request,
+    public ResponseEntity<LongURLDto> getLongURL(HttpServletRequest request,
         @PathVariable(value = "short_url") String shortURL) throws Exception {
 
-        String longURL = urlService.getLongURL(shortURL);
-        
-        statisticsService.sendDataForStatistics(request, shortURL);
+        LongURLDto longURL = urlService.getLongURL(shortURL);
 
-        return utilsService.redirect(longURL);
+        HttpHeaders responseHeaders = utilsService.getResponseHeaders();
+        return ResponseEntity.ok().headers(responseHeaders).body(longURL);
     }
     
 }
