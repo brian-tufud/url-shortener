@@ -11,10 +11,10 @@
 		<relativePath/>
 		<!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.url-shortener-read.api</groupId>
-	<artifactId>url-shortener-read-api</artifactId>
+	<groupId>com.read.api</groupId>
+	<artifactId>read-api</artifactId>
 	<packaging>jar</packaging>
-	<name>url-shortener-read-api</name>
+	<name>read-api</name>
 	<version>1.0.0</version>
 	<properties>
 		<java.version>1.8</java.version>
@@ -62,25 +62,10 @@
 			<artifactId>httpclient5</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>nl.basjes.parse.useragent</groupId>
-			<artifactId>yauaa</artifactId>
-			<version>7.26.0</version>
-		</dependency>
-		<dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sqs</artifactId>
-            <version>2.17.0</version>
-        </dependency>
-		<dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>dynamodb</artifactId>
             <version>2.17.0</version>
         </dependency>
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>5.0.0</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -89,7 +74,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.url-shortener.api.Application</mainClass>
+					<mainClass>com.read.api.Application</mainClass>
 				</configuration>
 				<executions>
 					<execution>
